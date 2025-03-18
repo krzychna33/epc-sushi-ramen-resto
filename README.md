@@ -31,8 +31,8 @@ Your system should support:
   - Each order should have a unique identifier (UUID).
   - Status for each order:
     - `"new"` (just placed),
-    - `"in_the_kitchen"` (preparing),
-    - `"in_delivery"` (ready for waitstaff to serve),
+    - `"inTheKitchen"` (preparing),
+    - `"inDelivery"` (ready for waitstaff to serve),
     - `"done"` (delivered to the guest).
   - A `total price` field (sum of the meal prices in that order).
 
