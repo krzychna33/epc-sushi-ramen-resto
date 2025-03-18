@@ -1,17 +1,18 @@
+import * as dotenv from 'dotenv';
+dotenv.config();
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { ValidationPipe } from '@nestjs/common';
-import * as dotenv from 'dotenv';
-dotenv.config();
-import { ConfigService } from 'nestjs-config';
+import { ConfigType } from '@nestjs/config';
 import { swaggerSetup } from './swagger-setup';
+import { CommonConfig } from '@config/common.config';
 import { AppModule } from './app.module';
-import { ConfigNames } from '@config/config-names.enum';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  const configService = app.get<ConfigService>(ConfigService);
-  const commonConfig = configService.get(ConfigNames.common);
+  const commonConfig = app.get<ConfigType<typeof CommonConfig>>(
+    CommonConfig.KEY,
+  );
   if (commonConfig.env === 'development') {
     const morgan = await import('morgan');
     app.use(morgan.default('[:date[clf]] :method :url :status'));
@@ -24,7 +25,6 @@ async function bootstrap() {
         : []),
     ],
     credentials: true,
-    exposedHeaders: ['Content-Length', 'Content-Disposition', 'X-File-Name'],
   });
   app.useGlobalPipes(
     new ValidationPipe({

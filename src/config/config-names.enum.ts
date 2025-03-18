@@ -1,4 +1,4 @@
 export enum ConfigNames {
-  redis = 'redis',
-  common = 'common',
+  Redis = 'redis',
+  Common = 'common',
 }
