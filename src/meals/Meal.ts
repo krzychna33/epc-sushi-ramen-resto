@@ -1,4 +1,6 @@
+import { ObjectId } from 'mongodb';
 import { AggregateRoot } from '../libs/ddd/aggregate-root.base';
+import { AggregateID } from '../libs/ddd/entity.base';
 
 export type MealProps = {
   name: string;
@@ -6,12 +8,18 @@ export type MealProps = {
   price: number;
 };
 
-export class Meal extends AggregateRoot<MealProps> {
-  protected _id!: string;
+export type CreateMealProps = {
+  name: string;
+  categoryId: string;
+  price: number;
+};
 
-  static create(props: MealProps): Meal {
+export class Meal extends AggregateRoot<MealProps> {
+  protected _id!: AggregateID;
+
+  static create(props: CreateMealProps): Meal {
     return new Meal({
-      id: crypto.randomUUID(),
+      id: new ObjectId().toString(),
       props: {
         name: props.name,
         categoryId: props.categoryId,

@@ -18,6 +18,11 @@ export class CategoriesService {
     return this.categoriesRepository.find({});
   }
 
+  public async categoryExists(id: string): Promise<boolean> {
+    const category = await this.categoriesRepository.findOneById(id);
+    return !!category;
+  }
+
   async createCategory(dto: CreateCategoryDto): Promise<Category> {
     try {
       const category = Category.create({ name: dto.name });
