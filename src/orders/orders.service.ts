@@ -64,8 +64,6 @@ export class OrdersService {
       order.id,
     );
 
-    this.orderKitchenQueue.getJobCounts().then(console.log);
-
     this.logger.log(
       `Order has been created with ID: ${order.id} and added to the kitchen queue.`,
     );
