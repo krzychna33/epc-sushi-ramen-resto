@@ -1,5 +1,6 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { ObjectId } from 'mongodb';
 import { RepositoryBase } from '../../libs/database/repository.base';
 import { MealSchema } from '@meals/db/meal.schema';
 import { Meal } from '@meals/Meal';
@@ -12,5 +13,9 @@ export class MealsRepository extends RepositoryBase<MealSchema, Meal> {
     protected readonly mealMapper: MealMapper,
   ) {
     super(mealModel, mealMapper);
+  }
+
+  public findManyByIds(ids: string[]): Promise<Meal[]> {
+    return this.find({ _id: { $in: ids.map((id) => new ObjectId(id)) } });
   }
 }

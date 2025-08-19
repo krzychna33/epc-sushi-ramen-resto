@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongodb';
 import { AggregateRoot } from '../libs/ddd/aggregate-root.base';
 
 export type OrderMeal = {
@@ -25,7 +26,7 @@ export class Order extends AggregateRoot<OrderProps> {
 
   static create(): Order {
     return new Order({
-      id: crypto.randomUUID(),
+      id: new ObjectId().toString(),
       props: {
         meals: [],
         status: OrderStatus.NEW,
@@ -57,10 +58,8 @@ export class Order extends AggregateRoot<OrderProps> {
     );
 
     if (existingMealIndex >= 0) {
-      // Update existing meal quantity
       this.props.meals[existingMealIndex].quantity += quantity;
     } else {
-      // Add new meal
       this.props.meals.push({
         mealId,
         name,
@@ -72,35 +71,22 @@ export class Order extends AggregateRoot<OrderProps> {
     this.calculateTotalPrice();
   }
 
-  removeMeal(mealId: string): void {
-    if (this.props.status !== OrderStatus.NEW) {
-      throw new Error('Cannot remove meals from an order that is not new');
+  async prepareOrder() {
+    if (this.getStatus() !== OrderStatus.IN_THE_KITCHEN) {
+      throw new Error(`Order must be in delivery to complete delivery`);
     }
 
-    this.props.meals = this.props.meals.filter(
-      (meal) => meal.mealId !== mealId,
-    );
-    this.calculateTotalPrice();
+    for (const meal of this.props.meals) {
+      await new Promise((resolve) => setTimeout(resolve, 100 * meal.quantity));
+    }
   }
 
-  updateMealQuantity(mealId: string, quantity: number): void {
-    if (this.props.status !== OrderStatus.NEW) {
-      throw new Error(
-        'Cannot update meal quantity for an order that is not new',
-      );
+  async deliverOrder() {
+    if (this.getStatus() !== OrderStatus.IN_DELIVERY) {
+      throw new Error(`Order must be in delivery to complete delivery`);
     }
 
-    if (quantity <= 0) {
-      throw new Error('Quantity must be greater than 0');
-    }
-
-    const meal = this.props.meals.find((meal) => meal.mealId === mealId);
-    if (!meal) {
-      throw new Error('Meal not found in order');
-    }
-
-    meal.quantity = quantity;
-    this.calculateTotalPrice();
+    await new Promise((resolve) => setTimeout(resolve, 2000));
   }
 
   changeStatus(newStatus: OrderStatus): void {
@@ -124,7 +110,7 @@ export class Order extends AggregateRoot<OrderProps> {
       case OrderStatus.IN_DELIVERY:
         return [OrderStatus.DONE];
       case OrderStatus.DONE:
-        return []; // No further transitions allowed
+        return [];
       default:
         return [];
     }
@@ -141,19 +127,7 @@ export class Order extends AggregateRoot<OrderProps> {
     return this.props.totalPrice;
   }
 
-  getMeals(): readonly OrderMeal[] {
-    return Object.freeze([...this.props.meals]);
-  }
-
   getStatus(): OrderStatus {
     return this.props.status;
-  }
-
-  canAddMeals(): boolean {
-    return this.props.status === OrderStatus.NEW;
-  }
-
-  isEmpty(): boolean {
-    return this.props.meals.length === 0;
   }
 }

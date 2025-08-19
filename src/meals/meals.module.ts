@@ -19,5 +19,6 @@ import { MealsController } from './meals.controller';
   ],
   controllers: [MealsController],
   providers: [MealsService, MealsRepository, MealMapper],
+  exports: [MealsService],
 })
 export class MealsModule {}

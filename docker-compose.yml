@@ -23,3 +23,11 @@ services:
       - /app/node_modules
     depends_on:
       - epc-reso-mongo
+
+  epc-resto-redis:
+    container_name: epc-resto-redis
+    image: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data/redis:/data

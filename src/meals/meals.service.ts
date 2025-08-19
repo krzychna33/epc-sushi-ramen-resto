@@ -21,6 +21,11 @@ export class MealsService {
     return this.mealsRepository.find({});
   }
 
+  public async getMealsByIds(id: string[]): Promise<Meal[]> {
+    const meals = await this.mealsRepository.findManyByIds(id);
+    return meals;
+  }
+
   async createMeal(dto: CreateMealDto): Promise<Meal> {
     const categoryExists = await this.categoriesService.categoryExists(
       dto.categoryId,
