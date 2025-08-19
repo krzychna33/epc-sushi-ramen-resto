@@ -6,6 +6,7 @@ import { RedisConfig } from '@config/redis.config';
 import { OrdersModule } from '@orders/orders.module';
 import { MealsModule } from '@meals/meals.module';
 import { CategoriesModule } from '@categories/categories.module';
+import { DatabaseModule } from './libs/database/database.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { CategoriesModule } from '@categories/categories.module';
       }),
       inject: [RedisConfig.KEY],
     }),
+    DatabaseModule,
     OrdersModule,
     MealsModule,
     CategoriesModule,

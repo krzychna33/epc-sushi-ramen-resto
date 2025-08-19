@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+  epc-reso-mongo:
+    container_name: epc-resto-mongo
+    image: mongo
+    ports:
+      - "27017:27017"
+    environment:
+      MONGODB_DATABASE: epc-resto
+    volumes:
+      - ./data/db:/data/db
+
+  epc-resto-app:
+    container_name: epc-resto-app
+    image: epc-rest-app:latest
+    build: .
+    command: [ "npm", "run", "start:dev" ]
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - epc-reso-mongo

@@ -1,4 +1,4 @@
-import { cleanEnv, makeValidator, port, str } from 'envalid';
+import { cleanEnv, makeValidator, port, str, url } from 'envalid';
 import { isURL } from 'class-validator';
 import { registerAs } from '@nestjs/config';
 import { ConfigNames } from '@config/config-names.enum';
@@ -20,10 +20,12 @@ const env = cleanEnv(process.env, {
   }),
   PORT: port({ devDefault: 3000 }),
   NODE_ENV: str({ devDefault: 'development' }),
+  DB_URL: url({ devDefault: 'mongodb://localhost:27017/epc-resto' }),
 });
 
 export const CommonConfig = registerAs(ConfigNames.Common, () => ({
   frontUrl: env.FRONT_URL,
   port: env.PORT,
   env: env.NODE_ENV,
+  dbUrl: env.DB_URL,
 }));
