@@ -15,7 +15,8 @@
     "start:dev": "env NODE_ENV=development nest start --watch",
     "start:debug": "env nest start --debug",
     "start:prod": "env node dist/src/main",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test": "jest"
   },
   "dependencies": {
     "@nestjs/bullmq": "^11.0.2",
@@ -53,6 +54,7 @@
     "@types/app-root-path": "^1.2.4",
     "@types/cache-manager": "^3.4.2",
     "@types/express": "^5.0.0",
+    "@types/jest": "^30.0.0",
     "@types/morgan": "^1.9.3",
     "@types/multer": "^1.4.7",
     "@types/node": "^22.13.10",
@@ -67,8 +69,10 @@
     "eslint-plugin-unused-imports": "4.1.4",
     "globals": "^15.15.0",
     "husky": "^9.0.11",
+    "jest": "^30.0.5",
     "lint-staged": "^15.5.0",
     "prettier": "3.5.0",
+    "ts-jest": "^29.4.1",
     "ts-loader": "^9.2.3",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
@@ -82,5 +86,22 @@
       "prettier --write"
     ],
     "*.js": "eslint --cache --fix"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "**/*.(t|j)s"
+    ],
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node"
   }
 }

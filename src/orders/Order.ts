@@ -73,7 +73,7 @@ export class Order extends AggregateRoot<OrderProps> {
 
   async prepareOrder() {
     if (this.getStatus() !== OrderStatus.IN_THE_KITCHEN) {
-      throw new Error(`Order must be in delivery to complete delivery`);
+      throw new Error(`Order must be in the kitchen to prepare`);
     }
 
     for (const meal of this.props.meals) {
