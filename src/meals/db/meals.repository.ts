@@ -6,6 +6,10 @@ import { MealSchema } from '@meals/db/meal.schema';
 import { Meal } from '@meals/Meal';
 import { MealMapper } from '@meals/db/meal.mapper';
 
+export type MealQueryFilters = {
+  categoryId?: string;
+};
+
 export class MealsRepository extends RepositoryBase<MealSchema, Meal> {
   public constructor(
     @InjectModel(MealSchema.name)
@@ -17,5 +21,11 @@ export class MealsRepository extends RepositoryBase<MealSchema, Meal> {
 
   public findManyByIds(ids: string[]): Promise<Meal[]> {
     return this.find({ _id: { $in: ids.map((id) => new ObjectId(id)) } });
+  }
+
+  public findByFilters(filters: MealQueryFilters): Promise<Meal[]> {
+    return this.find({
+      ...(filters.categoryId ? { categoryId: filters.categoryId } : {}),
+    });
   }
 }

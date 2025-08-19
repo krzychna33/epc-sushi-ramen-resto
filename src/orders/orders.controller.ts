@@ -1,5 +1,5 @@
 import { Controller, Post, Body, Get, Param, Query } from '@nestjs/common';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
 import { OrdersService } from './orders.service';
 import {
@@ -48,6 +48,13 @@ export class OrdersController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'Get all orders or filter by status' })
+  @ApiQuery({
+    name: 'status',
+    required: false,
+    description: 'Filter orders by status',
+    type: String,
+  })
   async getOrders(
     @Query() queryDto: GetOrdersQueryRequest,
   ): Promise<GetOrdersResponse> {

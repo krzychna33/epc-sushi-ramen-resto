@@ -9,6 +9,7 @@ import { Meal } from '@meals/Meal';
 import { MealsRepository } from '@meals/db/meals.repository';
 import { CategoriesService } from '@categories/categories.service';
 import { CreateMealDto } from '@meals/dto/create-meal.dto';
+import { GetMealsQueryRequest } from './dto/get-meals.dto';
 
 @Injectable()
 export class MealsService {
@@ -17,8 +18,10 @@ export class MealsService {
     private readonly categoriesService: CategoriesService,
   ) {}
 
-  public getMeals(): Promise<Meal[]> {
-    return this.mealsRepository.find({});
+  public getMeals(queryDto: GetMealsQueryRequest): Promise<Meal[]> {
+    return this.mealsRepository.findByFilters({
+      categoryId: queryDto.categoryId,
+    });
   }
 
   public async getMealsByIds(id: string[]): Promise<Meal[]> {
